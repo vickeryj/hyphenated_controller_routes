@@ -1,0 +1,55 @@
+HyphenatedControllerRoutes
+==========================
+
+This plugin adds support for hyphenated controller names in routing paths.
+
+It consists of two parts, a named route generator for the default routes, and a
+modification to ActionController::Resources::Resource which changes the
+routes that it generates to use hyphens instead of underscores in the
+controller names.
+
+To generate hyphenated default routes call map.add_hyphenated_routes() in 
+config.routes.  To use hyphenated resources, call 
+map.use_hyphenated_resources().
+
+Calling map.add_hyphenated_routes() before the default routing entry
+in config.routes means that the default helpers will create routes in 
+the form /:controller-name rather than /:controller_name.
+
+Example
+=======
+Take for example a controller named ContactUs.  The normal default
+routing would recognize paths in the form /contact_us/:action/:id
+adding a call to map.add_hyphenated_routes before the default routing
+line will create the named route "contact_us" "/contact-us/:action/:id"
+
+If, instead ContactUs is routed using the RESTful map.resources call, 
+the standard named routes and helper will be created, but with hyphens
+instead of underscores (GET /contact-us index contact_us_url).
+
+
+Here is a sample config.routes
+-
+
+ActionController::Routing::Routes.draw do |map|
+  
+  #a resource that will be mapped with an underscore
+  map.resources :non_hyphenated_resources
+
+  #turn on hyphenated resources
+  map.use_hyphenated_resources()
+
+  #all following resources will use hyphens (contact-us)
+  map.resource :contact_us
+
+  # add hyphenated routes with higher priority than the default routes
+  map.add_hyphenated_routes
+  
+  # Install the default routes
+  map.connect ':controller/:action/:id.:format'
+  map.connect ':controller/:action/:id'
+
+end
+
+-----
+Copyright (c) 2007 Josh Vickery for adPickles Inc, released under the MIT license

@@ -1,0 +1,1 @@
+require 'hyphenated_controller_routes'

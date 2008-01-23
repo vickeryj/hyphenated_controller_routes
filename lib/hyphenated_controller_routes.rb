@@ -4,7 +4,14 @@ module ActionController
       class Mapper
         UNDERSCORE_PATTERN = /^[^_]+?(_[^_]+)+?$/
         def add_hyphenated_routes
-          ActionController::Routing.possible_controllers.each do |controller|
+
+          controller_dir = File.join(RAILS_ROOT, 'app/controllers')
+          controllers = []
+          Dir.chdir(controller_dir) do
+            controllers = Dir["*_controller.rb"].map{|c| c.sub(/\_controller.rb$/,'')}
+          end
+
+          controllers.each do |controller|
             if controller =~ UNDERSCORE_PATTERN
               @set.add_named_route(controller, 
                 "/#{ controller.gsub(/_/,'-')}/:action/:id", :controller => controller)

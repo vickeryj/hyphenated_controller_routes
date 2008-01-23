@@ -4,13 +4,7 @@ require 'active_record'
 require 'action_controller'
 require File.dirname(__FILE__) + '/../lib/hyphenated_controller_routes'
 
-module ActionController::Routing
-  class << self
-    def possible_controllers
-      ["test_underscore"]
-    end
-  end
-end
+ActionController::Routing::RouteSet::Mapper::RAILS_ROOT = File.dirname(__FILE__) + '/test_controllers'
 
 class HyphenatedControllerRoutesTest < Test::Unit::TestCase
   def test_add_routes
